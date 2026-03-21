@@ -15,36 +15,58 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const LiveTrackingMap = () => {
-  // Center coordinates (e.g., Manila, Philippines)
-  const center = [14.5995, 120.9842];
-
-  const vehicles = [
-    { id: "001", pos: [14.605, 120.989], driver: "Juan Dela Cruz" },
-    { id: "002", pos: [14.590, 120.975], driver: "Maria Santos" },
-  ];
+// Accept vehicles from the parent component
+const LiveTrackingMap = ({ vehicles = [] }) => {
+  // Centered around General Trias, Calabarzon
+  const center = [14.3838, 120.8809];
 
   return (
-    <div className="h-full w-full rounded-xl overflow-hidden border border-slate-200">
+    // Added z-0 to prevent the map from overlapping your modals/dropdowns
+    <div className="h-full w-full overflow-hidden z-0 relative">
       <MapContainer 
         center={center} 
-        zoom={13} 
-        style={{ height: '350px', width: '100%' }} // Matches your original CSS height
+        zoom={12} 
+        style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {vehicles.map((v) => (
-          <Marker key={v.id} position={v.pos}>
-            <Popup>
-              <div className="text-sm font-sans">
-                <p className="font-bold">Vehicle #{v.id}</p>
-                <p className="text-slate-600">{v.driver}</p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        
+        {vehicles.map((v, index) => {
+          // Fallback: If your database doesn't have lat/lng yet, we offset them
+          // slightly from the center based on their index so they don't stack perfectly on top of each other.
+          const lat = v.lat || center[0] + (index * 0.015 - 0.03);
+          const lng = v.lng || center[1] + (index * 0.015 - 0.03);
+
+          return (
+            <Marker key={v._id || index} position={[lat, lng]}>
+              <Popup>
+                <div className="text-sm font-sans min-w-[140px]">
+                  <p className="font-black text-slate-800 border-b border-slate-100 pb-1.5 mb-1.5 uppercase tracking-wide">
+                    {v.name}
+                  </p>
+                  <div className="space-y-1 mt-2">
+                    <p className="text-xs text-slate-600 flex justify-between">
+                      <span className="font-bold">Plate:</span> 
+                      <span className="font-mono text-blue-600 bg-blue-50 px-1 rounded">{v.id}</span>
+                    </p>
+                    <p className="text-xs text-slate-600 flex justify-between">
+                      <span className="font-bold">Status:</span> 
+                      <span className={v.status === 'Moving' ? 'text-green-600 font-bold' : 'text-amber-600 font-bold'}>
+                        {v.status}
+                      </span>
+                    </p>
+                    <p className="text-xs text-slate-600 flex justify-between">
+                      <span className="font-bold">Speed:</span> 
+                      <span>{v.speed}</span>
+                    </p>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );

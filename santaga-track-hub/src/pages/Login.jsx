@@ -24,6 +24,7 @@ export default function Login() {
       if (res.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.user.role);
+        localStorage.setItem("name", data.user.name);
         navigate("/dashboard");
       } else {
         // Set the error message (e.g., "Your account is pending approval")

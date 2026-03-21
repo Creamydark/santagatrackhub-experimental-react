@@ -1,18 +1,17 @@
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
+const db = require("./db"); // Import your pool.promise() from db.js
 
-const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/users");
-
-dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 5000;
-
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
+// Attach the database pool to the app so routes can access it
+app.set('db', db); 
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// Routes (Make sure these come AFTER app.set('db'))
+app.use("/api/vehicles", require("./routes/vehicles"));
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/users", require("./routes/users"));
+
+app.listen(5000, () => console.log("🚀 Server running on http://localhost:5000"));
