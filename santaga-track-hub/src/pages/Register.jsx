@@ -28,50 +28,50 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 p-8">
-        <h2 className="text-2xl font-bold text-slate-800 mb-2">Create an Account</h2>
-        <p className="text-slate-500 mb-6 text-sm">Sign up for SantagaTrackHub access.</p>
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 dark:border-gray-700 p-8">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-gray-100 mb-2">Create an Account</h2>
+        <p className="text-slate-500 dark:text-gray-400 mb-6 text-sm">Sign up for SantagaTrackHub access.</p>
         
-        {message && <div className="mb-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm">{message}</div>}
+        {message && <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm">{message}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700 ml-1">Full Name</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-1">Full Name</label>
             <input 
               type="text" required
               value={formData.name} 
               onChange={(e) => setFormData({...formData, name: e.target.value})} 
-              className="w-full border border-slate-200 p-2.5 rounded-xl outline-none focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+              className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl outline-none focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white dark:bg-gray-700 text-slate-900 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-gray-500" 
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-1">Email Address</label>
             <input 
               type="email" required
               value={formData.email} 
               onChange={(e) => setFormData({...formData, email: e.target.value})} 
-              className="w-full border border-slate-200 p-2.5 rounded-xl outline-none focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+              className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl outline-none focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white dark:bg-gray-700 text-slate-900 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-gray-500" 
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700 ml-1">Password</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-1">Password</label>
             <input 
               type="password" required minLength="6"
               value={formData.password} 
               onChange={(e) => setFormData({...formData, password: e.target.value})} 
-              className="w-full border border-slate-200 p-2.5 rounded-xl outline-none focus:ring-blue-500/20 focus:border-blue-500 transition-all" 
+              className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl outline-none focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white dark:bg-gray-700 text-slate-900 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-gray-500" 
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700 ml-1">Requested Role</label>
+            <label className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-1">Requested Role</label>
             <select 
               value={formData.role} 
               onChange={(e) => setFormData({...formData, role: e.target.value})} 
-              className="w-full border border-slate-200 p-2.5 rounded-xl bg-white outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl bg-white dark:bg-gray-700 outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-gray-100"
             >
               <option value="Health Worker">Health Worker</option>
               <option value="Driver">Driver</option>
@@ -83,8 +83,8 @@ export default function Register() {
             Register
           </button>
         </form>
-        <p className="mt-6 text-center text-sm text-slate-500">
-          Already have an account? <Link to="/login" className="text-blue-600 font-semibold hover:underline">Log in</Link>
+        <p className="mt-6 text-center text-sm text-slate-500 dark:text-gray-400">
+          Already have an account? <Link to="/login" className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">Log in</Link>
         </p>
       </div>
     </div>

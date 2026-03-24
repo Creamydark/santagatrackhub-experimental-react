@@ -146,70 +146,71 @@ export default function Vehicles() {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case 'On the run': return "bg-green-100 text-green-700 border-green-200";
-      case 'Maintenance': return "bg-red-100 text-red-700 border-red-200";
-      default: return "bg-slate-100 text-slate-600 border-slate-200"; 
+      case 'On the run': return "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700";
+      case 'Maintenance': return "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-700";
+      default: return "bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-gray-300 border-slate-200 dark:border-gray-600"; 
     }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 overflow-hidden text-slate-900">
-      <header className="p-4 bg-white border-b border-slate-200 flex justify-between items-center shrink-0 z-10">
+    <div className="flex flex-col h-screen bg-slate-50 dark:bg-gray-900 overflow-hidden text-slate-900 dark:text-gray-100">
+      <header className="p-4 bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700 flex justify-between items-center shrink-0 z-10">
         <div>
-          <h1 className="text-xl font-bold text-slate-800">Vehicle Management</h1>
-          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Fleet Systems</p>
+          <h1 className="text-xl font-bold text-slate-800 dark:text-gray-100">Vehicle Management</h1>
+          <p className="text-[10px] text-slate-400 dark:text-gray-500 font-bold uppercase tracking-widest">Fleet Systems</p>
         </div>
         <div className="flex items-center space-x-3">
-          <button onClick={() => openModal()} className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-100 transition-all active:scale-95">
+          <button onClick={() => openModal()} className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-100 dark:shadow-blue-900/50 transition-all active:scale-95">
             <Plus size={18} className="mr-2" /> Add Vehicle
           </button>
-          <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
-            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg ${viewMode === 'list' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-400'}`}><List size={18} /></button>
+          <div className="flex bg-slate-100 dark:bg-gray-700 p-1 rounded-xl border border-slate-200 dark:border-gray-600">
+            <button onClick={() => setViewMode('list')} className={`p-1.5 rounded-lg ${viewMode === 'list' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600' : 'text-slate-400 dark:text-gray-500'}`}><List size={18} /></button>
             <button 
               onClick={() => setViewMode('split')} 
-              className={`flex items-center justify-center p-1.5 rounded-lg ${viewMode === 'split' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-400'}`}
+              className={`flex items-center justify-center p-1.5 rounded-lg ${viewMode === 'split' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600' : 'text-slate-400 dark:text-gray-500'}`}
             >
               {/* Replaced the border-r hack with a solid, centered line to match the 18px size of your other icons */}
               <div className="w-[2px] h-[18px] bg-current rounded-sm" />
             </button>
-            <button onClick={() => setViewMode('map')} className={`p-1.5 rounded-lg ${viewMode === 'map' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-400'}`}><MapIcon size={18} /></button>
+            <button onClick={() => setViewMode('map')} className={`p-1.5 rounded-lg ${viewMode === 'map' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600' : 'text-slate-400 dark:text-gray-500'}`}><MapIcon size={18} /></button>
           </div>
         </div>
       </header>
 
       <div className="flex flex-1 min-h-0 overflow-hidden">
-        <aside className={`${viewMode === 'map' ? 'w-0 opacity-0 invisible' : viewMode === 'list' ? 'w-full' : 'w-[400px]'} bg-white border-r border-slate-200 flex flex-col transition-all duration-300`}>
+        <aside className={`${viewMode === 'map' ? 'w-0 opacity-0 invisible' : viewMode === 'list' ? 'w-full' : 'w-[400px]'} bg-white dark:bg-gray-800 border-r border-slate-200 dark:border-gray-700 flex flex-col transition-all duration-300`}>
           <div className="p-4 space-y-3 shrink-0">
             <div className="relative">
-              <Search className="absolute left-3 top-2.5 text-slate-400 w-4 h-4" />
-              <input type="text" placeholder="Search plates..." className="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/10" />
+              <Search className="absolute left-3 top-2.5 text-slate-400 dark:text-gray-500 w-4 h-4" />
+              <input type="text" placeholder="Search plates..." className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-gray-700 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/10 border border-slate-200 dark:border-gray-600 text-slate-900 dark:text-gray-100" />
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-4 pt-0">
             {vehicles.map((v) => (
-              <div key={v._id} className="p-4 rounded-2xl border border-slate-200 bg-white shadow-sm hover:border-blue-300 transition-all group">
+              <div key={v._id} className="p-4 rounded-2xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm hover:border-blue-300 dark:hover:border-blue-500 transition-all group">
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-slate-50 rounded-xl">
-                      <Truck className="w-5 h-5 text-slate-500" />
+                    <div className="p-2 bg-slate-50 dark:bg-gray-700/50 rounded-xl">
+                      {/* Changed slate-500 to slate-600 for light mode contrast */}
+                      <Truck className="w-5 h-5 text-slate-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900 text-sm capitalize">{v.name}</h3>
+                      <h3 className="font-bold text-slate-900 dark:text-gray-100 text-sm capitalize">{v.name}</h3>
                       
-                      {/* NEW: Added the model right next to the plate number */}
                       <div className="flex items-center space-x-1.5 mt-0.5">
-                        <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wider">{v.id}</span>
+                        <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold uppercase tracking-wider">{v.id}</span>
                         {v.model && (
                           <>
-                            <span className="text-[10px] text-slate-300">•</span>
-                            <span className="text-[10px] text-slate-500 font-medium capitalize truncate max-w-[120px]">{v.model}</span>
+                            <span className="text-[10px] text-slate-300 dark:text-gray-600">•</span>
+                            {/* Slate-500 is often too dark for dark-mode; gray-400 is better */}
+                            <span className="text-[10px] text-slate-500 dark:text-gray-400 font-medium capitalize truncate max-w-[120px]">{v.model}</span>
                           </>
                         )}
                       </div>
-
                     </div>
                   </div>
+                  
                   <div className={`px-2.5 py-1 rounded-full border text-[10px] font-bold flex items-center space-x-1 uppercase tracking-wide ${getStatusBadge(v.status)}`}>
                     {v.status === 'On the run' && <Navigation size={10} className="mr-1" />}
                     {v.status === 'Maintenance' && <Wrench size={10} className="mr-1" />}
@@ -218,56 +219,56 @@ export default function Vehicles() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 mb-3 bg-slate-50 p-2.5 rounded-xl">
-                  <div className="flex items-center text-[11px] font-bold text-slate-600">
-                    <Fuel className="w-3.5 h-3.5 mr-1.5 text-slate-400" /> {v.fuel}
+                <div className="grid grid-cols-2 gap-2 mb-3 bg-slate-50 dark:bg-gray-900/40 p-2.5 rounded-xl border border-transparent dark:border-gray-700/50">
+                  <div className="flex items-center text-[11px] font-bold text-slate-600 dark:text-gray-300">
+                    <Fuel className="w-3.5 h-3.5 mr-1.5 text-slate-400 dark:text-gray-500" /> {v.fuel}
                   </div>
-                  <div className="flex items-center text-[11px] font-bold text-slate-600">
-                    <Gauge className="w-3.5 h-3.5 mr-1.5 text-slate-400" /> {v.speed}
+                  <div className="flex items-center text-[11px] font-bold text-slate-600 dark:text-gray-300">
+                    <Gauge className="w-3.5 h-3.5 mr-1.5 text-slate-400 dark:text-gray-500" /> {v.speed}
                   </div>
                   {v.status === 'On the run' && v.currentUser && (
-                    <div className="col-span-2 flex items-center text-[11px] font-bold text-blue-700 mt-1">
-                      <Activity className="w-3.5 h-3.5 mr-1.5 text-blue-500" /> Driven by: {v.currentUser}
+                    <div className="col-span-2 flex items-center text-[11px] font-bold text-blue-700 dark:text-blue-300 mt-1">
+                      <Activity className="w-3.5 h-3.5 mr-1.5 text-blue-500 dark:text-blue-400" /> Driven by: {v.currentUser}
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-gray-700">
                   <button 
                     onClick={() => openDispatchModal(v)}
-                    className="text-[11px] font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors flex items-center"
+                    className="text-[11px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 px-3 py-1.5 rounded-lg transition-colors flex items-center border border-transparent dark:border-blue-500/20"
                   >
                     Update Status
                   </button>
                   <div className="flex items-center space-x-1">
-                    <button onClick={() => openViewModal(v)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-md transition-colors" title="View Details"><Eye size={14} /></button>
-                    <button onClick={() => openModal(v)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-md transition-colors" title="Edit Vehicle"><Edit2 size={14} /></button>
-                    <button onClick={() => handleDelete(v._id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Delete"><Trash2 size={14} /></button>
+                    <button onClick={() => openViewModal(v)} className="p-1.5 text-slate-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-gray-700 rounded-md transition-colors" title="View Details"><Eye size={14} /></button>
+                    <button onClick={() => openModal(v)} className="p-1.5 text-slate-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-gray-700 rounded-md transition-colors" title="Edit Vehicle"><Edit2 size={14} /></button>
+                    <button onClick={() => handleDelete(v._id)} className="p-1.5 text-slate-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors" title="Delete"><Trash2 size={14} /></button>
                   </div>
                 </div>
-              </div>
+            </div>
             ))}
           </div>
         </aside>
 
-        <main className={`${viewMode === 'list' ? 'hidden' : 'flex-1'} relative z-0 bg-slate-200`}>
+        <main className={`${viewMode === 'list' ? 'hidden' : 'flex-1'} relative z-0 bg-slate-200 dark:bg-gray-700`}>
           <LivetrackMap vehicles={vehicles} />
         </main>
       </div>
 
       {/* REGISTRATION MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden border border-slate-200">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-900/80 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-gray-700">
             
-            <div className="p-6 border-b flex justify-between items-center bg-slate-50/50">
+            <div className="p-6 border-b flex justify-between items-center bg-slate-50/50 dark:bg-gray-700/50">
               <div>
-                <h2 className="text-lg font-semibold text-slate-800">
+                <h2 className="text-lg font-semibold text-slate-800 dark:text-gray-100">
                   {editingVehicle ? 'Edit Vehicle Info' : 'Register New Vehicle'}
                 </h2>
-                <p className="text-sm text-slate-500">Enter the vehicle details below</p>
+                <p className="text-sm text-slate-500 dark:text-gray-400">Enter the vehicle details below</p>
               </div>
-              <button onClick={closeModal} className="p-2 hover:bg-white rounded-full transition-all text-slate-400">
+              <button onClick={closeModal} className="p-2 hover:bg-white dark:hover:bg-gray-700 rounded-full transition-all text-slate-400 dark:text-gray-500">
                 <X size={20} />
               </button>
             </div>
@@ -275,54 +276,54 @@ export default function Vehicles() {
             <form onSubmit={handleSubmit} className="p-8 space-y-5">
               
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-600 ml-1">Vehicle Label</label>
+                <label className="text-xs font-medium text-slate-600 dark:text-gray-400 ml-1">Vehicle Label</label>
                 <input 
                   required 
                   value={formData.name} 
                   onChange={(e) => setFormData({...formData, name: e.target.value})} 
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 placeholder:text-slate-400" 
+                  className="w-full p-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-gray-500" 
                   placeholder="e.g. Truck 01" 
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-600 ml-1">Plate Number</label>
+                <label className="text-xs font-medium text-slate-600 dark:text-gray-400 ml-1">Plate Number</label>
                 <input 
                   required 
                   value={formData.id} 
                   onChange={(e) => setFormData({...formData, id: e.target.value})} 
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 placeholder:text-slate-400 uppercase" 
+                  className="w-full p-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-gray-500 uppercase" 
                   placeholder="e.g. ABC-1234" 
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-slate-600 ml-1">Model / Brand</label>
+                  <label className="text-xs font-medium text-slate-600 dark:text-gray-400 ml-1">Model / Brand</label>
                   <input 
                     value={formData.model} 
                     onChange={(e) => setFormData({...formData, model: e.target.value})} 
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 placeholder:text-slate-400" 
+                    className="w-full p-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-gray-500" 
                     placeholder="e.g. Isuzu" 
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-slate-600 ml-1">Initial Fuel Level</label>
+                  <label className="text-xs font-medium text-slate-600 dark:text-gray-400 ml-1">Initial Fuel Level</label>
                   <input 
                     value={formData.fuel} 
                     onChange={(e) => setFormData({...formData, fuel: e.target.value})} 
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 placeholder:text-slate-400" 
+                    className="w-full p-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder:text-gray-500" 
                     placeholder="e.g. 100%" 
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-600 ml-1">Vehicle Category</label>
+                <label className="text-xs font-medium text-slate-600 dark:text-gray-400 ml-1">Vehicle Category</label>
                 <select 
                   value={formData.type} 
                   onChange={(e) => setFormData({...formData, type: e.target.value})} 
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none font-medium text-slate-700 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl text-sm outline-none font-medium text-slate-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="Truck">Truck</option>
                   <option value="Van">Van</option>
@@ -344,19 +345,19 @@ export default function Vehicles() {
 
       {/* DISPATCH MODAL */}
       {isDispatchModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200">
-            <div className="p-6 border-b flex justify-between items-center bg-blue-50/50">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-900/80 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-[2rem] w-full max-w-sm shadow-2xl overflow-hidden border border-slate-200 dark:border-gray-700">
+            <div className="p-6 border-b flex justify-between items-center bg-blue-50/50 dark:bg-blue-900/20">
               <div>
-                <h2 className="text-lg font-bold text-slate-800">Dispatch Update</h2>
-                <p className="text-[10px] text-slate-500 font-bold uppercase">{dispatchingVehicle?.name} ({dispatchingVehicle?.id})</p>
+                <h2 className="text-lg font-bold text-slate-800 dark:text-gray-100">Dispatch Update</h2>
+                <p className="text-[10px] text-slate-500 dark:text-gray-400 font-bold uppercase">{dispatchingVehicle?.name} ({dispatchingVehicle?.id})</p>
               </div>
-              <button onClick={closeDispatchModal} className="p-2 hover:bg-white rounded-full transition-all text-slate-400"><X size={20} /></button>
+              <button onClick={closeDispatchModal} className="p-2 hover:bg-white dark:hover:bg-gray-700 rounded-full transition-all text-slate-400 dark:text-gray-500"><X size={20} /></button>
             </div>
             
             <form onSubmit={handleDispatchSubmit} className="p-6 space-y-5">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Current Status</label>
+                <label className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase ml-1">Current Status</label>
                 <select 
                   value={dispatchData.status} 
                   onChange={(e) => {
@@ -367,7 +368,7 @@ export default function Vehicles() {
                       currentUser: newStatus === 'On the run' ? dispatchData.currentUser : ''
                     });
                   }} 
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none font-bold text-slate-700"
+                  className="w-full p-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl text-sm outline-none font-bold text-slate-700 dark:text-gray-100"
                 >
                   <option value="Idle">Idle (Parked)</option>
                   <option value="On the run">On the run (Moving)</option>
@@ -377,12 +378,12 @@ export default function Vehicles() {
 
               {dispatchData.status === 'On the run' && (
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Assign Driver</label>
+                  <label className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase ml-1">Assign Driver</label>
                   <select 
                     required 
                     value={dispatchData.currentUser} 
                     onChange={(e) => setDispatchData({...dispatchData, currentUser: e.target.value})} 
-                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700"
+                    className="w-full p-3 bg-slate-50 dark:bg-gray-700 border border-slate-200 dark:border-gray-600 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700 dark:text-gray-100"
                   >
                     <option value="" disabled>Select a driver...</option>
                     {driversList.map((driver) => (
@@ -402,59 +403,59 @@ export default function Vehicles() {
 
       {/* NEW: VIEW DETAILS MODAL */}
       {isViewModalOpen && viewingVehicle && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden border border-slate-200">
-            <div className="p-6 border-b flex justify-between items-center bg-slate-50/50">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-900/80 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden border border-slate-200 dark:border-gray-700">
+            <div className="p-6 border-b flex justify-between items-center bg-slate-50/50 dark:bg-gray-700/50">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-white rounded-xl shadow-sm border border-slate-100">
-                  <Truck className="w-5 h-5 text-blue-600" />
+                <div className="p-2 bg-white dark:bg-gray-700 rounded-xl shadow-sm border border-slate-100 dark:border-gray-600">
+                  <Truck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-800">Vehicle Profile</h2>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Database Record</p>
+                  <h2 className="text-lg font-bold text-slate-800 dark:text-gray-100">Vehicle Profile</h2>
+                  <p className="text-[10px] text-slate-400 dark:text-gray-500 font-bold uppercase tracking-widest">Database Record</p>
                 </div>
               </div>
-              <button onClick={closeViewModal} className="p-2 hover:bg-white rounded-full transition-all text-slate-400"><X size={20} /></button>
+              <button onClick={closeViewModal} className="p-2 hover:bg-white dark:hover:bg-gray-700 rounded-full transition-all text-slate-400 dark:text-gray-500"><X size={20} /></button>
             </div>
             
             <div className="p-8">
               <div className="grid grid-cols-2 gap-y-6 gap-x-4">
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Vehicle Name</p>
-                  <p className="font-semibold text-slate-800 mt-1">{viewingVehicle.name}</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wide">Vehicle Name</p>
+                  <p className="font-semibold text-slate-800 dark:text-gray-100 mt-1">{viewingVehicle.name}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Plate Number</p>
-                  <p className="font-mono font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded inline-block mt-1">{viewingVehicle.id}</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wide">Plate Number</p>
+                  <p className="font-mono font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded inline-block mt-1">{viewingVehicle.id}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Model / Brand</p>
-                  <p className="font-medium text-slate-700 mt-1">{viewingVehicle.model || 'N/A'}</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wide">Model / Brand</p>
+                  <p className="font-medium text-slate-700 dark:text-gray-300 mt-1">{viewingVehicle.model || 'N/A'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Category</p>
-                  <p className="font-medium text-slate-700 mt-1">{viewingVehicle.type}</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wide">Category</p>
+                  <p className="font-medium text-slate-700 dark:text-gray-300 mt-1">{viewingVehicle.type}</p>
                 </div>
-                <div className="col-span-2 pt-4 border-t border-slate-100 grid grid-cols-2 gap-4">
+                <div className="col-span-2 pt-4 border-t border-slate-100 dark:border-gray-600 grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Current Status</p>
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wide">Current Status</p>
                     <div className={`mt-1.5 px-2.5 py-1 rounded-md border text-[11px] font-bold inline-flex items-center space-x-1 uppercase tracking-wide ${getStatusBadge(viewingVehicle.status)}`}>
                       {viewingVehicle.status}
                     </div>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Current Driver</p>
-                    <p className="font-semibold text-slate-800 mt-1.5">{viewingVehicle.currentUser || 'None'}</p>
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wide">Current Driver</p>
+                    <p className="font-semibold text-slate-800 dark:text-gray-100 mt-1.5">{viewingVehicle.currentUser || 'None'}</p>
                   </div>
                 </div>
-                <div className="col-span-2 pt-4 border-t border-slate-100 flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                <div className="col-span-2 pt-4 border-t border-slate-100 dark:border-gray-600 flex justify-between items-center bg-slate-50 dark:bg-gray-700 p-3 rounded-xl">
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Added By</p>
-                    <p className="font-medium text-slate-600 text-xs mt-0.5">{viewingVehicle.createdBy || 'System'}</p>
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wide">Added By</p>
+                    <p className="font-medium text-slate-600 dark:text-gray-400 text-xs mt-0.5">{viewingVehicle.createdBy || 'System'}</p>
                   </div>
                   <div className="text-right">
-                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Fuel Level</p>
-                     <p className="font-bold text-slate-700 text-xs mt-0.5">{viewingVehicle.fuel}</p>
+                     <p className="text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-wide">Fuel Level</p>
+                     <p className="font-bold text-slate-700 dark:text-gray-300 text-xs mt-0.5">{viewingVehicle.fuel}</p>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+// Add "Navigate" to this list
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Truck, 
@@ -13,13 +15,15 @@ import {
   Menu
 } from "lucide-react";
 
+import { userRoles } from "../constants/UserRoles";
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
   { name: "Vehicles", icon: Truck, path: "/vehicles" },
   { name: "Health", icon: Heart, path: "/health" },
   { name: "QR Codes", icon: QrCode, path: "/qrcodes" },
-  { name: "Users", icon: Users, path: "/users", role: "admin" },
-  { name: "Settings", icon: Settings, path: "/settings", role: "admin" },
+  { name: "Users", icon: Users, path: "/users", role: "admin", },
+
+  { name: "Settings", icon: Settings, path: "/settings", role: userRoles },
 ];
 
 export default function Sidebar() {
@@ -46,9 +50,9 @@ export default function Sidebar() {
       {/* Mobile Toggle Button (Only visible on small screens) */}
       <button 
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md border"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-md border dark:border-gray-700"
       >
-        <Menu size={24} />
+        <Menu size={24} className="text-gray-700 dark:text-gray-300" />
       </button>
 
       {/* Sidebar Container */}
@@ -57,19 +61,19 @@ export default function Sidebar() {
           fixed lg:static inset-y-0 left-0 z-40
           ${isCollapsed ? "lg:w-20" : "lg:w-64"} 
           ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-          bg-white border-r flex flex-col h-screen transition-all duration-300 ease-in-out
+          bg-white dark:bg-gray-800 border-r border-slate-100 dark:border-gray-700 flex flex-col h-screen transition-all duration-300 ease-in-out
         `}
       >
         {/* Header Section */}
-        <div className="h-20 flex items-center px-4 border-b border-slate-100 shrink-0 relative">
+        <div className="h-20 flex items-center px-4 border-b border-slate-100 dark:border-gray-700 shrink-0 relative">
           <div className="flex items-center space-x-3 overflow-hidden">
             <div className="bg-blue-600 p-2 rounded-xl shrink-0">
               <LayoutDashboard className="text-white" size={24} />
             </div>
             {!isCollapsed && (
               <div className="flex flex-col whitespace-nowrap opacity-100 transition-opacity">
-                <span className="text-[17px] font-bold text-slate-900 leading-tight">SantagaHub</span>
-                <span className="text-[11px] font-medium text-slate-500 leading-tight">Santiago Tracking</span>
+                <span className="text-[17px] font-bold text-slate-900 dark:text-gray-100 leading-tight">SantagaTrackHub</span>
+                <span className="text-[11px] font-medium text-slate-500 dark:text-gray-400 leading-tight">Santiago Tracking</span>
               </div>
             )}
           </div>
@@ -77,9 +81,9 @@ export default function Sidebar() {
           {/* Collapse Toggle (Desktop only) */}
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:flex absolute -right-3 top-7 bg-white border rounded-full p-1 hover:bg-slate-50"
+            className="hidden lg:flex absolute -right-3 top-7 bg-white dark:bg-gray-800 border dark:border-gray-600 rounded-full p-1 hover:bg-slate-50 dark:hover:bg-gray-700"
           >
-            {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+            {isCollapsed ? <ChevronRight size={14} className="text-gray-600 dark:text-gray-300" /> : <ChevronLeft size={14} className="text-gray-600 dark:text-gray-300" />}
           </button>
         </div>
 
@@ -94,11 +98,11 @@ export default function Sidebar() {
                 to={item.path}
                 className={`group flex items-center px-3 py-3 rounded-xl transition-all ${
                   isActive 
-                    ? "bg-blue-50 text-blue-600 font-semibold" 
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-700 font-medium"
+                    ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-semibold" 
+                    : "text-slate-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-gray-700 hover:text-slate-700 dark:hover:text-gray-200 font-medium"
                 }`}
               >
-                <Icon size={22} className={`shrink-0 ${isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"}`} />
+                <Icon size={22} className={`shrink-0 ${isActive ? "text-blue-600 dark:text-blue-400" : "text-slate-400 dark:text-gray-500 group-hover:text-slate-600 dark:group-hover:text-gray-300"}`} />
                 {!isCollapsed && (
                   <span className="ml-3 text-sm whitespace-nowrap transition-opacity">
                     {item.name}
@@ -107,7 +111,7 @@ export default function Sidebar() {
                 
                 {/* Tooltip for collapsed state */}
                 {isCollapsed && (
-                   <span className="absolute left-16 scale-0 group-hover:scale-100 transition-all bg-slate-800 text-white text-xs p-2 rounded ml-4 pointer-events-none">
+                   <span className="absolute left-16 scale-0 group-hover:scale-100 transition-all bg-slate-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs p-2 rounded ml-4 pointer-events-none">
                      {item.name}
                    </span>
                 )}
@@ -117,10 +121,10 @@ export default function Sidebar() {
         </nav>
 
         {/* Logout Section */}
-        <div className="p-4 border-t shrink-0">
+        <div className="p-4 border-t border-slate-100 dark:border-gray-700 shrink-0">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center px-3 py-3 text-red-500 hover:bg-red-50 rounded-xl font-medium transition-colors"
+            className="w-full flex items-center px-3 py-3 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-medium transition-colors"
           >
             <LogOut size={22} className="shrink-0" />
             {!isCollapsed && <span className="ml-3 text-sm">Logout</span>}

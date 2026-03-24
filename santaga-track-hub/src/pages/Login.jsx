@@ -36,8 +36,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f7fb] flex items-center justify-center p-4 font-sans">
-      <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-[420px] p-8 sm:p-10">
+    <div className="min-h-screen bg-[#f4f7fb] dark:bg-gray-900 flex items-center justify-center p-4 font-sans">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] w-full max-w-[420px] p-8 sm:p-10">
         
         {/* Header Section */}
         <div className="flex flex-col items-center mb-8">
@@ -46,8 +46,8 @@ export default function Login() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09m15.44 2.04l-.054-.09m-2.744-10.03L20.52 9M15.52 9l-3.33 3.33m0 0l-3.33-3.33m3.33 3.33V4" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Welcome Back</h1>
-          <p className="text-slate-500 text-sm mt-1">Please enter your details to sign in.</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-gray-100 tracking-tight">Welcome Back</h1>
+          <p className="text-slate-500 dark:text-gray-400 text-sm mt-1">Please enter your details to sign in.</p>
         </div>
 
         {/* ✅ POPUP ERROR MESSAGE */}
@@ -67,13 +67,13 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Email Input */}
           <div className="space-y-1.5 pb-2">
-            <label htmlFor="email" className="block text-[13px] font-bold text-slate-700 ml-1">Email Address</label>
+            <label htmlFor="email" className="block text-[13px] font-bold text-slate-700 dark:text-gray-300 ml-1">Email Address</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-800"
+              className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-800 dark:text-gray-100 bg-white dark:bg-gray-700"
               placeholder="name@example.com"
               required
             />
@@ -81,13 +81,13 @@ export default function Login() {
 
           {/* Password Input */}
           <div className="space-y-1.5 pb-2">
-            <label htmlFor="password" className="block text-[13px] font-bold text-slate-700 ml-1">Password</label>
+            <label htmlFor="password" className="block text-[13px] font-bold text-slate-700 dark:text-gray-300 ml-1">Password</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-800"
+              className="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-800 dark:text-gray-100 bg-white dark:bg-gray-700"
               placeholder="••••••••"
               required
             />
@@ -101,8 +101,8 @@ export default function Login() {
           </button>
         </form>
 
-        <p className="mt-8 text-center text-[13px] text-slate-500">
-          Don't have an account? <Link to="/register" className="text-blue-600 font-bold hover:underline">Register here</Link>
+        <p className="mt-8 text-center text-[13px] text-slate-500 dark:text-gray-400">
+          Don't have an account? <Link to="/register" className="text-blue-600 dark:text-blue-400 font-bold hover:underline">Register here</Link>
         </p>
       </div>
     </div>
