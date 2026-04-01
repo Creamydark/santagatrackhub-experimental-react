@@ -1,17 +1,18 @@
 const express = require("express");
 const cors = require("cors");
-const db = require("./db"); // Import your pool.promise() from db.js
+const supabase = require("./db"); // This is now your Supabase client
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Attach the database pool to the app so routes can access it
-app.set('db', db); 
+// We still attach it so your 'req.app.get("db")' calls don't break immediately
+app.set('db', supabase); 
 
-// Routes (Make sure these come AFTER app.set('db'))
+// Routes
 app.use("/api/vehicles", require("./routes/vehicles"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/users", require("./routes/users"));
 
-app.listen(5000, () => console.log("🚀 Server running on http://localhost:5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

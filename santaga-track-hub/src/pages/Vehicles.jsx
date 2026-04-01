@@ -67,9 +67,21 @@ export default function Vehicles() {
     e.preventDefault();
     const method = editingVehicle ? 'PUT' : 'POST';
     const url = editingVehicle ? `${API_URL}/${editingVehicle._id}` : API_URL;
+    
+    // Get current user name for the 'created_by' field
     const currentUserName = localStorage.getItem("name") || "Admin";
 
-    const payload = { ...formData, speed: '0 km/h', status: 'Idle', creator: currentUserName };
+    // Ensure the keys here match exactly what your backend destructures
+    const payload = { 
+      name: formData.name,
+      id: formData.id,      // This is the plate number from your form
+      model: formData.model,
+      type: formData.type,
+      fuel: formData.fuel,
+      speed: 0,             // Send as a number to match int4 in Supabase
+      status: 'Idle', 
+      creator: currentUserName 
+    };
 
     try {
       const res = await fetch(url, {
@@ -77,9 +89,14 @@ export default function Vehicles() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+      
       if (res.ok) {
         fetchVehicles();
         closeModal();
+      } else {
+        // Log the error message from the server to see exactly what failed
+        const errorData = await res.json();
+        console.error("Server Error:", errorData.message);
       }
     } catch (err) {
       console.error("Submit error:", err);

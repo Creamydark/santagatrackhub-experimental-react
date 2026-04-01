@@ -1,108 +1,82 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");
+const supabase = require("../db");
 
 // GET all vehicles
 router.get("/", async (req, res) => {
-  const db = req.app.get('db');
+  const { data, error } = await supabase
+    .from('vehicles')
+    .select('*')
+    .order('created_at', { ascending: false });
+    
+  if (error) return res.status(500).json({ message: error.message });
+
+  const formatted = data.map(v => ({
+    _id: v.id,
+    id: v.plate_number,
+    name: v.name,
+    model: v.model,
+    type: v.type,
+    fuel: v.fuel,
+    speed: v.speed,
+    status: v.status,
+    createdBy: v.created_by,
+    currentUser: v.current_user 
+  }));
   
-  try {
-    const [rows] = await db.query("SELECT * FROM vehicles ORDER BY created_at DESC");
-    
-    const formatted = rows.map(v => ({
-      _id: v.id,
-      id: v.plate_number,
-      name: v.name,
-      model: v.model,
-      type: v.type,
-      fuel: v.fuel,
-      speed: v.speed,
-      status: v.status,
-      createdBy: v.created_by,
-      // NEW: Fetch the current driver
-      currentUser: v.current_user 
-    }));
-    
-    res.json(formatted);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Database Error: " + err.message });
-  }
+  res.json(formatted);
 });
 
 // POST a new vehicle
 router.post("/", async (req, res) => {
-  const db = req.app.get('db');
-  const { name, id, model, type, fuel, speed, status, creator } = req.body;
+  const { name, id, model, type, fuel, speed, creator } = req.body;
+  const creatorName = typeof creator === 'string' ? creator : (creator?.name || 'Admin');
 
-  try {
-    const sql = `INSERT INTO vehicles (name, plate_number, model, type, fuel, speed, status, created_by) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    
-    const creatorName = typeof creator === 'string' ? creator : (creator?.name || 'Admin');
-    
-    // Default new vehicles to Idle
-    const values = [name, id, model, type, fuel, speed, 'Idle', creatorName];
-    
-    const [result] = await db.query(sql, values);
-    res.status(201).json({ _id: result.insertId, message: "Vehicle added" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Insert Error: " + err.message });
+  const { data, error } = await supabase
+    .from('vehicles')
+    .insert([{
+      name: name,
+      plate_number: id, // Mapping 'id' from frontend to 'plate_number' in DB
+      model: model,
+      type: type,
+      fuel: fuel,
+      speed: parseInt(speed) || 0,
+      status: 'Idle',
+      created_by: creatorName
+    }])
+    .select();
+
+  if (error) {
+    console.error("Supabase Insertion Error:", error);
+    return res.status(500).json({ message: error.message });
   }
+  
+  res.status(201).json({ _id: data[0].id, message: "Vehicle added" });
 });
 
-// PUT (Update Base Info)
-router.put("/:id", async (req, res) => {
-  const db = req.app.get('db');
-  const vehicleId = req.params.id;
-  const { name, id, model, type, fuel } = req.body;
-
-  try {
-    const sql = `UPDATE vehicles SET name = ?, plate_number = ?, model = ?, type = ?, fuel = ? WHERE id = ?`;
-    const [result] = await db.query(sql, [name, id, model, type, fuel, vehicleId]);
-    
-    if (result.affectedRows === 0) return res.status(404).json({ message: "Vehicle not found" });
-    res.json({ message: "Vehicle updated successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Database Error: " + err.message });
-  }
-});
-
-// NEW ROUTE: PUT (Update Status & Driver)
+// UPDATE Status & Driver
 router.put("/:id/status", async (req, res) => {
-  const db = req.app.get('db');
-  const vehicleId = req.params.id;
   const { status, currentUser } = req.body;
+  const driver = status === 'On the run' ? currentUser : null;
 
-  try {
-    // FIX: Wrapped current_user in backticks to prevent MariaDB keyword conflict
-    const sql = `UPDATE vehicles SET status = ?, \`current_user\` = ? WHERE id = ?`;
+  const { error } = await supabase
+    .from('vehicles')
+    .update({ status, current_user: driver })
+    .eq('id', req.params.id);
     
-    // If status is not "On the run", we clear the driver name
-    const driver = status === 'On the run' ? currentUser : null;
-    
-    const [result] = await db.query(sql, [status, driver, vehicleId]);
-    
-    if (result.affectedRows === 0) return res.status(404).json({ message: "Vehicle not found" });
-    res.json({ message: "Status updated successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Database Error: " + err.message });
-  }
+  if (error) return res.status(500).json({ message: error.message });
+  res.json({ message: "Status updated successfully" });
 });
 
 // DELETE a vehicle
 router.delete("/:id", async (req, res) => {
-  const db = req.app.get('db');
-  try {
-    await db.query("DELETE FROM vehicles WHERE id = ?", [req.params.id]);
-    res.json({ message: "Vehicle deleted" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
-  }
+  const { error } = await supabase
+    .from('vehicles')
+    .delete()
+    .eq('id', req.params.id);
+
+  if (error) return res.status(500).json({ message: error.message });
+  res.json({ message: "Vehicle deleted" });
 });
 
 module.exports = router;
