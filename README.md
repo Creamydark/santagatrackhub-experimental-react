@@ -1,3 +1,11 @@
+
+<img width="1920" height="951" alt="screencapture-localhost-5173-login-2026-04-01-16_21_43" src="https://github.com/user-attachments/assets/2f0b53de-aa59-47f8-9643-98f914ebeb11" />
+<img width="1920" height="1083" alt="image" src="https://github.com/user-attachments/assets/0cf4b929-2fa5-4532-9eef-b82e575eee9f" />
+
+
+
+
+
 Here is a professional, comprehensive `README.md` template tailored perfectly for your repository. It incorporates your system architecture, technology stack, and core modules. 
 
 You can copy this raw markdown and paste it directly into your GitHub repository's `README.md` file.
