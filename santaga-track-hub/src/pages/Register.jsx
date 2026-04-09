@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../utils/supabaseClient'; // Make sure this path is correct!
 
 export default function Register() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Health Worker' });
@@ -8,26 +9,37 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
+
     try {
-      // Point this to your public registration endpoint
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData) // Status should default to 'Pending' on the backend
+      // JUST create the user in Supabase. The Trigger handles the MySQL/Profile sync.
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name,
+            role: formData.role, // The trigger will grab this
+          }
+        }
       });
 
-      if (response.ok) {
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      if (data?.user) {
         setMessage('Registration successful! Please wait for an administrator to approve your account.');
-        setTimeout(() => navigate('/login'), 5000);
-      } else {
-        setMessage('Registration failed. Please try again.');
+        setTimeout(() => navigate('/login'), 3000);
       }
     } catch (err) {
-      setMessage('Network error. Please try again later.');
+      setMessage('An unexpected error occurred.');
     }
   };
 
   return (
+    // ... Your exact same return HTML/JSX goes here! No UI changes needed. ...
     <div className="min-h-screen bg-slate-50 dark:bg-gray-900 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-slate-800 dark:text-gray-100 mb-2">Create an Account</h2>
@@ -75,7 +87,7 @@ export default function Register() {
             >
               <option value="Health Worker">Health Worker</option>
               <option value="Driver">Driver</option>
-              <option value="Official">Official</option>
+              <option value="Admin">Admin</option>
             </select>
           </div>
 

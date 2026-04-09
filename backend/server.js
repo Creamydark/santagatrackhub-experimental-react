@@ -11,8 +11,7 @@ app.set('db', supabase);
 
 // Routes
 app.use("/api/vehicles", require("./routes/vehicles"));
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/users", require("./routes/users"));
+app.use("/api/auth", require("./routes/authRoutes")); // New route for syncing users
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
+import { supabase } from '../utils/supabaseClient'; // Import your configured Supabase client
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -9,24 +10,41 @@ export default function Login() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Clear previous errors
+    setErrorMessage('');
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      // 1. Authenticate with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
       });
-      
-      const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.user.role);
-        localStorage.setItem("name", data.user.name);
+      if (error) {
+        setErrorMessage(error.message);
+        return;
+      }
+
+      // 2. Fetch the actual profile data from your MySQL backend
+      // We use the Supabase UUID (data.user.id) to find the right record
+      const profileRes = await fetch(`http://localhost:5000/api/auth/profile/${data.user.id}`);
+      const profileData = await profileRes.json();
+
+      if (profileRes.ok) {
+        // Check if the account is approved before letting them in
+        if (profileData.status === 'Pending') {
+          setErrorMessage("Your account is still pending administrator approval.");
+          await supabase.auth.signOut(); // Log them out of Supabase since they aren't approved yet
+          return;
+        }
+
+        // 3. Bridge the MySQL data with your existing routing logic
+        localStorage.setItem("token", data.session.access_token);
+        localStorage.setItem("role", profileData.role.toLowerCase()); // Use database role
+        localStorage.setItem("name", profileData.name);               // Use database name
+        
         navigate("/dashboard");
       } else {
-        setErrorMessage(data.message);
+        setErrorMessage("Profile not found in system records.");
       }
     } catch (err) {
       setErrorMessage("Connection error. Please try again later.");
@@ -89,7 +107,7 @@ export default function Login() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-[420px] bg-white dark:bg-gray-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] lg:shadow-none lg:bg-transparent lg:dark:bg-transparent p-8 sm:p-10">
           
-          {/* Mobile Header (Hidden on large screens since it's on the left) */}
+          {/* Mobile Header */}
           <div className="lg:hidden flex flex-col items-center mb-8">
              <div className="bg-blue-600 p-3 rounded-2xl shadow-lg shadow-blue-200 mb-4">
                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +138,6 @@ export default function Login() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email Input */}
             <div className="space-y-1.5 pb-2">
               <label htmlFor="email" className="block text-[13px] font-bold text-slate-700 dark:text-gray-300 ml-1">Email Address</label>
               <input
@@ -134,7 +151,6 @@ export default function Login() {
               />
             </div>
 
-            {/* Password Input */}
             <div className="space-y-1.5 pb-2">
               <label htmlFor="password" className="block text-[13px] font-bold text-slate-700 dark:text-gray-300 ml-1">Password</label>
               <input

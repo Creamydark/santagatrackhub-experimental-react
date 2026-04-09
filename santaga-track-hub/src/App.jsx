@@ -41,12 +41,12 @@ function App() {
           
           <Route 
             path="settings" 
-            element={<RoleRoute allowedRoles={['admin']}><Settings /></RoleRoute>} 
+            element={<Settings />} 
           />
           
           <Route 
             path="users" 
-            element={<RoleRoute allowedRoles={['admin']}><Users /></RoleRoute>} 
+            element={<RoleRoute allowedRoles={['admin', 'official']}><Users /></RoleRoute>} 
           />
         </Route> {/* Correctly closes the Layout/Protected branch */}
       </Routes> 
