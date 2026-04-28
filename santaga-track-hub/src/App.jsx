@@ -8,6 +8,7 @@ import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
+import Qr from "./pages/Qr";
 
 const RoleRoute = ({ children, allowedRoles }) => {
   const userRole = localStorage.getItem("role")?.toLowerCase();
@@ -37,7 +38,6 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="vehicles" element={<Vehicles />} />
           <Route path="health" element={<Health />} />
-          <Route path="qrcodes" element={<Health />} />
           
           <Route 
             path="settings" 

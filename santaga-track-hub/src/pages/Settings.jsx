@@ -128,19 +128,16 @@ export default function Settings() {
         </SettingSection>
 
         {/* --- Security & System --- */}
-        <SettingSection icon={Shield} title="Security">
+        {/* <SettingSection icon={Shield} title="Security">
           <SettingRow 
             label="Two-Factor Authentication" 
             description="Add an extra layer of security to your account."
             action={<ChevronRight className="text-slate-400" size={18} />}
           />
-        </SettingSection>
+        </SettingSection> */}
 
         <footer className="mt-12 pt-6 border-t border-slate-200 dark:border-gray-800 flex justify-between items-center">
-            <button className="flex items-center space-x-2 text-red-500 hover:text-red-600 font-bold text-sm transition-colors">
-                <LogOut size={18} />
-                <span>Log Out</span>
-            </button>
+            
             <span className="text-[10px] text-slate-400 font-medium">App Version 2.4.0-stable</span>
         </footer>
       </div>

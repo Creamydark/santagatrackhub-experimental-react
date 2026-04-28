@@ -17,7 +17,6 @@ const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
   { name: "Vehicles", icon: Truck, path: "/vehicles" },
   { name: "Health", icon: Heart, path: "/health" },
-  { name: "QR Codes", icon: QrCode, path: "/qrcodes" },
   // Updated roles to allow both admin and official to see these links
   { name: "Users", icon: Users, path: "/users", allowedRoles: ["admin", "official"] },
   { name: "Settings", icon: Settings, path: "/settings"},
