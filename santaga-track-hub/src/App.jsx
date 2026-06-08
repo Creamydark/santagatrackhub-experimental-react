@@ -8,6 +8,7 @@ import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
+import VaccineStocks from "./pages/VaccineStocks";
 import Qr from "./pages/Qr";
 
 const RoleRoute = ({ children, allowedRoles }) => {
@@ -38,6 +39,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="vehicles" element={<Vehicles />} />
           <Route path="health" element={<Health />} />
+          <Route path="vaccine-stocks" element={<VaccineStocks />} />
           
           <Route 
             path="settings" 
