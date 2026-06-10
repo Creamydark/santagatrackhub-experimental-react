@@ -11,6 +11,8 @@ app.set('db', supabase);
 
 // Routes
 app.use("/api/vehicles", require("./routes/vehicles"));
+app.use("/api/patients", require("./routes/patients"));
+app.use("/api/immunizations", require("./routes/immunizations"));
 app.use("/api/auth", require("./routes/authRoutes")); // New route for syncing users
 
 const PORT = process.env.PORT || 5000;

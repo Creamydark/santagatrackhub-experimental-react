@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, Plus, ShieldCheck, Syringe, Calendar, FileText, 
-  X, User, Activity, AlertCircle, Clock, ChevronRight,
+  X, User, Activity, AlertCircle, AlertTriangle, Clock, ChevronRight,
   ScanLine, QrCode, Printer, Package, TrendingDown, 
   CheckCircle2, ArrowUpRight, ArrowDownRight
 } from 'lucide-react';
@@ -60,12 +60,47 @@ export default function Health() {
   const [patientForm, setPatientForm] = useState({ name: '', age: '', gender: 'Female', bloodType: 'O+', allergies: 'None', address: '' });
   const [vaccineForm, setVaccineForm] = useState({ vaccineType: 'Flu Vaccine', dose: '1st Dose', administeredBy: 'HW. Elena', status: 'Completed', nextSchedule: '', remarks: '' });
 
+  const API_URL = "http://localhost:5000/api/patients";
+  
+
+  useEffect(() => {
+  fetchPatients();
+}, []);
+
+const fetchPatients = async () => {
+  try {
+    const res = await fetch(API_URL);
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch patients");
+    }
+
+    const data = await res.json();
+    setPatients(
+  data.map(p => ({
+    ...p,
+    immunizations: p.immunizations ?? []
+  }))
+);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
   // --- METRICS ---
   const totalPatients = patients.length;
-  const totalDoses = patients.reduce((acc, p) => acc + p.immunizations.filter(v => v.status === 'Completed').length, 0);
-  const totalScheduled = patients.reduce((acc, p) => acc + p.immunizations.filter(v => v.status === 'Scheduled').length, 0);
+  const totalDoses = patients.reduce(
+  (acc, p) =>
+    acc + (p.immunizations?.filter(v => v.status === 'Completed').length || 0),
+  0
+);
+  const totalScheduled = patients.reduce(
+  (acc, p) =>
+    acc + (p.immunizations?.filter(v => v.status === 'Scheduled').length || 0),
+  0
+);
 
-  const filteredPatients = patients.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredPatients = patients.filter(p => p.name?.toLowerCase().includes(searchTerm.toLowerCase()));
 
   // --- HANDLERS ---
   const handleMockScan = () => {
@@ -79,49 +114,80 @@ export default function Health() {
       }
     }, 2000);
   };
+  const handleAddPatient = async (e) => {
+  e.preventDefault();
 
-  const handleAddPatient = (e) => {
-    e.preventDefault();
-    const newPatient = { id: Math.random().toString(36).substr(2, 9), ...patientForm, immunizations: [] };
-    setPatients([newPatient, ...patients]);
-    setIsAddPatientOpen(false);
-    setPatientForm({ name: '', age: '', gender: 'Female', bloodType: 'O+', allergies: 'None', address: '' });
-  };
-
-  const handleAddVaccine = (e) => {
-    e.preventDefault();
-    const newVaccine = { 
-      id: Math.random().toString(36).substr(2, 9), 
-      ...vaccineForm, 
-      dateGiven: vaccineForm.status === 'Completed' ? new Date().toISOString().split('T')[0] : '-' 
-    };
-    
-    // Update patient record
-    const updatedPatients = patients.map(p => {
-      if (p.id === selectedPatient.id) {
-        const updatedPatient = { ...p, immunizations: [newVaccine, ...p.immunizations] };
-        setSelectedPatient(updatedPatient); 
-        return updatedPatient;
-      }
-      return p;
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(patientForm)
     });
-    setPatients(updatedPatients);
 
-    // REAL-TIME INVENTORY DEDUCTION (If vaccine status is completed)
-    if (vaccineForm.status === 'Completed') {
-      setStocks(prevStocks => prevStocks.map(item => {
-        // Handle variations in name strings (e.g., Flu Vaccine vs COVID-19)
-        if (item.name.toLowerCase().includes(vaccineForm.vaccineType.toLowerCase()) || 
-            vaccineForm.vaccineType.toLowerCase().includes(item.name.toLowerCase())) {
-          return { ...item, doses: Math.max(item.doses - 1, 0) };
-        }
-        return item;
-      }));
+    if (res.ok) {
+      fetchPatients();
+
+      setIsAddPatientOpen(false);
+
+      setPatientForm({
+        name: '',
+        age: '',
+        gender: 'Female',
+        bloodType: 'O+',
+        allergies: 'None',
+        address: ''
+      });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+  const handleAddVaccine = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch(
+      "http://localhost:5000/api/immunizations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          patient_id: selectedPatient.id,
+          vaccineType: vaccineForm.vaccineType,
+          dose: vaccineForm.dose,
+          administeredBy: vaccineForm.administeredBy,
+          status: vaccineForm.status,
+          nextSchedule: vaccineForm.nextSchedule,
+          remarks: vaccineForm.remarks,
+          dateGiven:
+            vaccineForm.status === "Completed"
+              ? new Date().toISOString().split("T")[0]
+              : null
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Failed to save vaccine");
     }
 
+    await fetchPatients();
+
+    alert("Vaccine saved!");
     setIsAddVaccineOpen(false);
-    setVaccineForm({ vaccineType: 'Flu Vaccine', dose: '1st Dose', administeredBy: 'HW. Elena', status: 'Completed', nextSchedule: '', remarks: '' });
-  };
+
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
 
   const getStockStatus = (doses, threshold) => {
     if (doses === 0) return { label: 'Out of Stock', color: 'text-red-600 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/30', icon: AlertTriangle };
@@ -214,7 +280,7 @@ export default function Health() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-gray-700">
                 {filteredPatients.map((patient) => {
-                  const latestVaccine = patient.immunizations[0];
+                  const latestVaccine = patient.immunizations?.[0];
                   return (
                     <tr key={patient.id} className="hover:bg-slate-50 dark:hover:bg-gray-800/50 transition-colors">
                       <td className="px-6 py-4">
@@ -433,7 +499,7 @@ export default function Health() {
                     <button onClick={() => setIsAddVaccineOpen(true)} className="flex items-center gap-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 px-3 py-1.5 rounded-lg text-sm font-bold transition-colors"><Plus size={16} /> Add Vaccine</button>
                   </div>
 
-                  {selectedPatient.immunizations.length === 0 ? (
+                  {(selectedPatient?.immunizations ?? []).length === 0 ? (
                     <div className="text-center py-10 text-slate-500">No vaccines recorded yet.</div>
                   ) : (
                     <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:bg-slate-200 dark:before:bg-gray-700">
