@@ -35,18 +35,11 @@ const INITIAL_PATIENTS = [
   }
 ];
 
-const INITIAL_STOCKS = [
-  { id: 'vac1', name: 'Polio (OPV)', doses: 45, minThreshold: 10, category: 'Infant', lastRestock: '2026-05-10' },
-  { id: 'vac2', name: 'BCG', doses: 8, minThreshold: 15, category: 'Infant', lastRestock: '2026-04-25' },
-  { id: 'vac3', name: 'COVID-19 Booster', doses: 120, minThreshold: 50, category: 'Adult', lastRestock: '2026-05-12' },
-  { id: 'vac4', name: 'Pneumococcal', doses: 14, minThreshold: 10, category: 'Senior', lastRestock: '2026-05-01' },
-];
-
 export default function Health() {
   // --- STATE ---
   const [activeMenuTab, setActiveMenuTab] = useState('patients'); // 'patients' or 'inventory'
   const [patients, setPatients] = useState(INITIAL_PATIENTS);
-  const [stocks, setStocks] = useState(INITIAL_STOCKS);
+  const [stocks, setStocks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   
   // Modals & Sub-Navigation
@@ -61,10 +54,12 @@ export default function Health() {
   const [vaccineForm, setVaccineForm] = useState({ vaccineType: 'Flu Vaccine', dose: '1st Dose', administeredBy: 'HW. Elena', status: 'Completed', nextSchedule: '', remarks: '' });
 
   const API_URL = "http://localhost:5000/api/patients";
-  
 
+  const INVENTORY_API_URL = "http://localhost:5000/api/inventory";
+  
   useEffect(() => {
   fetchPatients();
+  fetchStocks();
 }, []);
 
 const fetchPatients = async () => {
@@ -84,6 +79,21 @@ const fetchPatients = async () => {
 );
   } catch (err) {
     console.error(err);
+  }
+};
+
+const fetchStocks = async () => {
+  try {
+    const response = await fetch(INVENTORY_API_URL);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch inventory");
+    }
+
+    const data = await response.json();
+    setStocks(data);
+  } catch (err) {
+    console.error("Inventory fetch error:", err);
   }
 };
 

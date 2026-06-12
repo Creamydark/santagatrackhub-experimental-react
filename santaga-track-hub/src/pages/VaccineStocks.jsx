@@ -12,11 +12,11 @@ export default function VaccineStocks() {
   const [stockToDelete, setStockToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({
-    vaccineName: '',
-    batchNumber: '',
-    quantity: '',
-    expiryDate: '',
-    receivedDate: new Date().toISOString().split('T')[0]
+    name: '',
+    doses: '',
+    minThreshold: '',
+    category: '',
+    lastRestock: new Date().toISOString().split('T')[0]
   });
 
   const API_URL = 'http://localhost:5000/api/inventory';
@@ -38,11 +38,11 @@ export default function VaccineStocks() {
   const openEditModal = (stock) => {
     setEditingStock(stock);
     setFormData({
-      vaccineName: stock.vaccineName,
-      batchNumber: stock.batchNumber,
-      quantity: stock.quantity,
-      expiryDate: stock.expiryDate,
-      receivedDate: stock.receivedDate
+      name: stock.name || '',
+      doses: stock.doses || '',
+      minThreshold: stock.minThreshold || '',
+      category: stock.category || '',
+      lastRestock: stock.lastRestock || ''
     });
     setIsModalOpen(true);
   };
@@ -62,11 +62,11 @@ export default function VaccineStocks() {
         setEditingStock(null);
         fetchStocks();
         setFormData({ 
-          vaccineName: '', 
-          batchNumber: '', 
-          quantity: '', 
-          expiryDate: '', 
-          receivedDate: new Date().toISOString().split('T')[0] 
+          name: '',
+          doses: '',
+          minThreshold: '',
+          category: '',
+          lastRestock: new Date().toISOString().split('T')[0] 
         });
       } else {
         const errorData = await response.json();
@@ -98,8 +98,9 @@ export default function VaccineStocks() {
   };
 
   const filteredStocks = stocks.filter(stock => 
-    stock.vaccineName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    stock.batchNumber.toLowerCase().includes(searchTerm.toLowerCase())
+    stock.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    stock.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||  
+    stock.doses?.toString().includes(searchTerm)
   );
 
   if (loading) return (
@@ -119,11 +120,11 @@ export default function VaccineStocks() {
           onClick={() => {
             setEditingStock(null);
             setFormData({ 
-              vaccineName: '', 
-              batchNumber: '', 
-              quantity: '', 
-              expiryDate: '', 
-              receivedDate: new Date().toISOString().split('T')[0] 
+              name: '',
+              doses: '',
+              minThreshold: '',
+              category: '',
+              lastRestock: new Date().toISOString().split('T')[0] 
             });
             setIsModalOpen(true);
           }}
@@ -138,7 +139,7 @@ export default function VaccineStocks() {
         <Search className="text-slate-400 ml-2" size={20} />
         <input 
           type="text" 
-          placeholder="Search by vaccine name or batch number..." 
+          placeholder="Search by Vaccine Name, Category or Units" 
           value={searchTerm} 
           onChange={(e) => setSearchTerm(e.target.value)} 
           className="w-full bg-transparent border-none outline-none text-slate-700 dark:text-gray-200 placeholder:text-slate-400" 
@@ -176,30 +177,30 @@ export default function VaccineStocks() {
                 <input 
                   type="text" 
                   required
-                  value={formData.vaccineName} 
-                  onChange={(e) => setFormData({...formData, vaccineName: e.target.value})} 
+                  value={formData.name} 
+                  onChange={(e) => setFormData({...formData, name: e.target.value})} 
                   className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl bg-white dark:bg-gray-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" 
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-gray-300">Batch Number</label>
+                  <label className="text-sm font-semibold text-slate-700 dark:text-gray-300">Available Doses</label>
                   <input 
-                    type="text" 
+                    type="number" 
                     required
-                    value={formData.batchNumber} 
-                    onChange={(e) => setFormData({...formData, batchNumber: e.target.value})} 
+                    value={formData.doses} 
+                    onChange={(e) => setFormData({...formData, doses: e.target.value})} 
                     className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl bg-white dark:bg-gray-700 text-slate-900 dark:text-white outline-none" 
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-gray-300">Quantity</label>
+                  <label className="text-sm font-semibold text-slate-700 dark:text-gray-300">Minimum Threshold</label>
                   <input 
                     type="number" 
                     required
-                    value={formData.quantity} 
-                    onChange={(e) => setFormData({...formData, quantity: e.target.value})} 
+                    value={formData.minThreshold} 
+                    onChange={(e) => setFormData({...formData, minThreshold: e.target.value})} 
                     className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl bg-white dark:bg-gray-700 text-slate-900 dark:text-white outline-none" 
                   />
                 </div>
@@ -207,22 +208,27 @@ export default function VaccineStocks() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-gray-300">Expiry Date</label>
-                  <input 
-                    type="date" 
+                  <label className="text-sm font-semibold text-slate-700 dark:text-gray-300">Category</label>
+                  <select  
                     required
-                    value={formData.expiryDate} 
-                    onChange={(e) => setFormData({...formData, expiryDate: e.target.value})} 
+                    value={formData.category} 
+                    onChange={(e) => setFormData({...formData, category: e.target.value})} 
                     className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl bg-white dark:bg-gray-700 text-slate-900 dark:text-white outline-none" 
-                  />
+                  >
+                    <option value="">Select Category</option>
+                    <option value="Infant">Infant</option>
+                    <option value="Adult">Adult</option>
+                    <option value="Senior">Senior</option>
+                    <option value="General">General</option>
+                  </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-gray-300">Date Received</label>
+                  <label className="text-sm font-semibold text-slate-700 dark:text-gray-300">Last Restock</label>
                   <input 
                     type="date" 
                     required
-                    value={formData.receivedDate} 
-                    onChange={(e) => setFormData({...formData, receivedDate: e.target.value})} 
+                    value={formData.lastRestock} 
+                    onChange={(e) => setFormData({...formData, lastRestock: e.target.value})} 
                     className="w-full border border-slate-200 dark:border-gray-600 p-2.5 rounded-xl bg-white dark:bg-gray-700 text-slate-900 dark:text-white outline-none" 
                   />
                 </div>
@@ -253,30 +259,29 @@ export default function VaccineStocks() {
         <table className="w-full text-left">
           <thead className="bg-slate-50/50 dark:bg-gray-900/50 border-b border-slate-100 dark:border-gray-700 text-slate-500 dark:text-gray-400 text-[11px] uppercase font-bold">
             <tr>
-              <th className="px-6 py-4">Vaccine</th>
-              <th className="px-6 py-4">Batch ID</th>
-              <th className="px-6 py-4">Current Stock</th>
-              <th className="px-6 py-4">Expiry</th>
-              <th className="px-6 py-4">Audit Date</th>
-              <th className="px-6 py-4 text-center">Actions</th>
+              <th className="px-6 py-4">Vaccine Name</th>
+              <th className="px-6 py-4">Category</th>
+              <th className="px-6 py-4">Available Doses</th>
+              <th className="px-6 py-4">Min Threshold</th>
+              <th className="px-6 py-4">Last Restock</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-gray-700">
             {filteredStocks.map((item) => (
               <tr key={item.id} className="text-sm hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors">
-                <td className="px-6 py-4 font-semibold text-slate-800 dark:text-gray-200">{item.vaccineName}</td>
-                <td className="px-6 py-4 text-slate-500 dark:text-gray-400 font-mono text-xs">{item.batchNumber}</td>
+                <td className="px-6 py-4 font-semibold text-slate-800 dark:text-gray-200">{item.name}</td>
+                <td className="px-6 py-4 text-slate-500 dark:text-gray-400 font-mono text-xs">{item.category}</td>
                 <td className="px-6 py-4">
                   <span className={`px-2.5 py-1 rounded-lg text-[12px] font-bold ${
-                    item.quantity < 10 
+                    item.doses < 10 
                     ? 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400' 
                     : 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400'
                   }`}>
-                    {item.quantity} units
+                    {item.doses} units
                   </span>
                 </td>
-                <td className="px-6 py-4 text-slate-600 dark:text-gray-400">{item.expiryDate}</td>
-                <td className="px-6 py-4 text-slate-400 dark:text-gray-500 italic text-xs">{item.receivedDate}</td>
+                <td className="px-6 py-4 text-slate-600 dark:text-gray-400">{item.minThreshold}</td>
+                <td className="px-6 py-4 text-slate-400 dark:text-gray-500 italic text-xs">{item.lastRestock}</td>
                 <td className="px-6 py-4 text-center">
                   <button 
                     onClick={() => openEditModal(item)} 
